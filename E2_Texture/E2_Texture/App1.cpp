@@ -2,6 +2,9 @@
 // Lab 2 example, textured quad
 #include "App1.h"
 
+float angle = 0.0f;
+float rotateAmount;
+
 App1::App1()
 {
 	mesh = nullptr;
@@ -13,10 +16,12 @@ void App1::init(HINSTANCE hinstance, HWND hwnd, int screenWidth, int screenHeigh
 	// Call super/parent init function (required!)
 	BaseApplication::init(hinstance, hwnd, screenWidth, screenHeight, in, VSYNC, FULL_SCREEN);
 
+	textureMgr->loadTexture(L"bunny", L"res/bunny.png");
 	textureMgr->loadTexture(L"brick", L"res/brick1.dds");
 
 	// Create Mesh object and shader object
 	mesh = new TexturedQuad(renderer->getDevice(), renderer->getDeviceContext());
+
 	textureShader = new TextureShader(renderer->getDevice(), hwnd);
 
 }
@@ -58,6 +63,8 @@ bool App1::frame()
 	{
 		return false;
 	}
+	
+	angle = angle + 0.001;
 
 	return true;
 }
@@ -79,8 +86,12 @@ bool App1::render()
 
 	// Send geometry data, set shader parameters, render object with shader
 	mesh->sendData(renderer->getDeviceContext());
-	textureShader->setShaderParameters(renderer->getDeviceContext(), worldMatrix, viewMatrix, projectionMatrix, textureMgr->getTexture(L"brick"));
+	textureShader->setShaderParameters(renderer->getDeviceContext(), worldMatrix = XMMatrixRotationRollPitchYaw(0.0,0.0,angle), viewMatrix, projectionMatrix, textureMgr->getTexture(L"bunny"), textureMgr->getTexture(L"brick"));
 	textureShader->render(renderer->getDeviceContext(), mesh->getIndexCount());
+
+	//mesh->sendData(renderer->getDeviceContext());
+	//textureShader->setShaderParameters(renderer->getDeviceContext(), worldMatrix = XMMatrixMultiply(XMMatrixRotationRollPitchYaw(0.0, 0.0, rotateAmount),XMMatrixTranslation(2.0,0.0,0.0)), viewMatrix, projectionMatrix, textureMgr->getTexture(L"brick"));
+	//textureShader->render(renderer->getDeviceContext(), mesh->getIndexCount());
 
 	// Render GUI
 	gui();
@@ -101,6 +112,8 @@ void App1::gui()
 	// Build UI
 	ImGui::Text("FPS: %.2f", timer->getFPS());
 	ImGui::Checkbox("Wireframe mode", &wireframeToggle);
+
+	ImGui::SliderFloat("float", &rotateAmount, 0.0f, 6.0f);
 
 	// Render UI
 	ImGui::Render();
