@@ -24,7 +24,7 @@ void ColourTriangle::initBuffers(ID3D11Device* device)
 	D3D11_SUBRESOURCE_DATA vertexData, indexData;
 
 	vertexCount = 4;
-	indexCount = 4;
+	indexCount = 6;
 
 	VertexType_Colour* vertices = new VertexType_Colour[vertexCount];
 	unsigned long* indices = new unsigned long[indexCount];
@@ -39,7 +39,7 @@ void ColourTriangle::initBuffers(ID3D11Device* device)
 	vertices[2].position = XMFLOAT3(1.0f, 0.0f, 0.0f);  // bottom right.
 	vertices[2].colour = XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f);
 
-	vertices[3].position = XMFLOAT3(1.0f, 1.0f, 0.0f);  // bottom right.
+	vertices[3].position = XMFLOAT3(1.0f, 1.0f, 0.0f); 
 	vertices[3].colour = XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f);
 
 	// Load the index array with data.
@@ -47,6 +47,8 @@ void ColourTriangle::initBuffers(ID3D11Device* device)
 	indices[1] = 1;  // Bottom left.
 	indices[2] = 2;  // Bottom right.
 	indices[3] = 3;
+	indices[4] = 0;
+	indices[5] = 2;
 
 	D3D11_BUFFER_DESC vertexBufferDesc = { sizeof(VertexType_Colour) * vertexCount, D3D11_USAGE_DEFAULT, D3D11_BIND_VERTEX_BUFFER, 0, 0, 0 };
 	vertexData = { vertices, 0 , 0 };
